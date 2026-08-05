@@ -9,7 +9,6 @@ and memory zeroing of derived keys.
 from pathlib import Path
 from typing import Callable, Optional
 
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 import config
@@ -79,7 +78,6 @@ class FileEncryptor:
             cipher = Cipher(
                 algorithms.AES(bytes(raw_key)),
                 modes.GCM(nonce),
-                backend=default_backend(),
             )
             encryptor = cipher.encryptor()
 
@@ -107,11 +105,7 @@ class FileEncryptor:
                 out_file.write(header_bytes)
 
                 # Process payload in configurable chunks
-                while True:
-                    chunk = in_file.read(chunk_size)
-                    if not chunk:
-                        break
-
+                while chunk := in_file.read(chunk_size):
                     cipher_chunk = encryptor.update(chunk)
                     if cipher_chunk:
                         out_file.write(cipher_chunk)

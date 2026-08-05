@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Callable, Optional
 
 from cryptography.exceptions import InvalidTag
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 import config
@@ -100,18 +99,13 @@ class FileDecryptor:
                 cipher = Cipher(
                     algorithms.AES(bytes(raw_key)),
                     modes.GCM(nonce, tag),
-                    backend=default_backend(),
                 )
                 decryptor = cipher.decryptor()
 
                 # 4. Streaming Decryption Read/Write Loop
                 processed_bytes = 0
                 with open(destination, "wb") as out_file:
-                    while True:
-                        chunk = in_file.read(chunk_size)
-                        if not chunk:
-                            break
-
+                    while chunk := in_file.read(chunk_size):
                         plain_chunk = decryptor.update(chunk)
                         if plain_chunk:
                             out_file.write(plain_chunk)

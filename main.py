@@ -9,7 +9,7 @@ import hashlib
 import os
 import sys
 from pathlib import Path
-from typing import List, Tuple
+from typing import List
 
 import pytest
 
