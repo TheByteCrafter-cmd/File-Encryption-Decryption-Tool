@@ -4,6 +4,8 @@ Secure File Encryption & Decryption Engine Package.
 Exposes core classes, exceptions, and key derivation primitives.
 """
 
+from encryption.aes_decrypt import FileDecryptor
+from encryption.aes_encrypt import FileEncryptor
 from encryption.key_manager import KeyDerivationManager
 from encryption.utils import (
     CorruptedFileError,
@@ -18,6 +20,8 @@ from encryption.utils import (
 )
 
 __all__ = [
+    "FileEncryptor",
+    "FileDecryptor",
     "KeyDerivationManager",
     "FEDTError",
     "EncryptionError",
