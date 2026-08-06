@@ -93,6 +93,16 @@ class PasswordMeterWidget(ctk.CTkFrame):
         )
         self.crack_time_label.grid(row=0, column=1, sticky="e")
 
+        # 4. Security Suggestion Tip Label
+        self.suggestion_label = ctk.CTkLabel(
+            self,
+            text="💡 Tip: Enter a secret password with at least 12 characters, numbers & symbols.",
+            font=ctk.CTkFont(size=11),
+            text_color="gray60",
+            anchor="w",
+        )
+        self.suggestion_label.grid(row=3, column=0, sticky="w", pady=(3, 0))
+
     def get_password(self) -> str:
         """Returns current entered password string."""
         return self.password_entry.get()
@@ -121,9 +131,16 @@ class PasswordMeterWidget(ctk.CTkFrame):
     def _update_meter(self, password: str) -> None:
         """Recalculates entropy score and updates UI strength bar & labels."""
         ratio, rating, color, crack_time = PasswordEntropy.get_strength_rating(password)
+        bits = PasswordEntropy.calculate_entropy(password)
+        suggestions = PasswordEntropy.get_suggestions(password)
 
         self.strength_bar.set(ratio)
         self.strength_bar.configure(progress_color=color)
 
-        self.rating_label.configure(text=f"Strength: {rating}", text_color=color)
+        self.rating_label.configure(
+            text=f"Strength: {rating} ({bits:.1f} bits)", text_color=color
+        )
         self.crack_time_label.configure(text=f"Est. Crack Time: {crack_time}")
+
+        tip_text = f"💡 Tip: {suggestions[0]}" if suggestions else ""
+        self.suggestion_label.configure(text=tip_text)

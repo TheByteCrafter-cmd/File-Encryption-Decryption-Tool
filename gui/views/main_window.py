@@ -142,12 +142,20 @@ class MainWindow(ctk.CTk):
         self.nav_callbacks[page_key] = callback
 
     def set_active_page(self, page_key: str) -> None:
-        """Highlights active sidebar navigation button."""
+        """Highlights active sidebar navigation button with Fluent active pill styling."""
         for key, btn in self.nav_buttons.items():
             if key == page_key:
-                btn.configure(fg_color=("gray75", "gray25"))
+                btn.configure(
+                    fg_color=("#0078D4", "#0078D4"),
+                    text_color="#FFFFFF",
+                    font=ctk.CTkFont(size=14, weight="bold"),
+                )
             else:
-                btn.configure(fg_color="transparent")
+                btn.configure(
+                    fg_color="transparent",
+                    text_color=("gray10", "gray90"),
+                    font=ctk.CTkFont(size=14, weight="normal"),
+                )
 
     def set_page_title(self, title: str) -> None:
         """Updates header title bar text."""

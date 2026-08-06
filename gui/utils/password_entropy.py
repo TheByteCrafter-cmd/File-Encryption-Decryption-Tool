@@ -89,3 +89,28 @@ class PasswordEntropy:
             return 0.75, "Good", "#FCE100", crack_time
         else:
             return 1.00, "Very Strong", "#107C41", crack_time
+
+    @staticmethod
+    def get_suggestions(password: str) -> list[str]:
+        """
+        Returns a list of actionable security improvement suggestions.
+        """
+        if not password:
+            return ["Enter a strong secret password."]
+
+        suggestions = []
+        if len(password) < 12:
+            suggestions.append("Make password at least 12 characters long.")
+        if not any(c.isupper() for c in password):
+            suggestions.append("Add uppercase letters (A-Z).")
+        if not any(c.islower() for c in password):
+            suggestions.append("Add lowercase letters (a-z).")
+        if not any(c.isdigit() for c in password):
+            suggestions.append("Add numbers (0-9).")
+        if not any(not c.isalnum() for c in password):
+            suggestions.append("Add special symbols (!@#$%^&*).")
+
+        if not suggestions:
+            suggestions.append("Great password! Extremely high cryptographic entropy.")
+
+        return suggestions

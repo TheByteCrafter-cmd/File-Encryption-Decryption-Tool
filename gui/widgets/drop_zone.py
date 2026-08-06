@@ -105,10 +105,19 @@ class DropZoneWidget(ctk.CTkFrame):
         )
         self.clear_btn.grid(row=0, column=2, rowspan=2, padx=10)
 
-        # Bind Click Event to Prompt Frame
-        self.prompt_frame.bind("<Button-1>", lambda e: self._browse_file())
-        self.icon_label.bind("<Button-1>", lambda e: self._browse_file())
-        self.text_label.bind("<Button-1>", lambda e: self._browse_file())
+        # Bind Click & Hover Glow Events to Prompt Frame
+        for widget in (self, self.prompt_frame, self.icon_label, self.text_label):
+            widget.bind("<Button-1>", lambda e: self._browse_file())
+            widget.bind("<Enter>", lambda e: self._on_hover_enter())
+            widget.bind("<Leave>", lambda e: self._on_hover_leave())
+
+    def _on_hover_enter(self) -> None:
+        """Glows border accent blue on mouse hover."""
+        self.configure(border_color="#0078D4")
+
+    def _on_hover_leave(self) -> None:
+        """Restores default border color when mouse leaves."""
+        self.configure(border_color=("gray75", "gray30"))
 
     def set_file(self, file_path: Path) -> None:
         """Sets the selected file and updates card UI."""
