@@ -18,11 +18,13 @@ import customtkinter as ctk
 import config
 from gui.controllers.decrypt_controller import DecryptController
 from gui.controllers.encrypt_controller import EncryptController
+from gui.controllers.history_controller import HistoryController
 from gui.controllers.main_controller import MainController
 from gui.models.history_model import HistoryModel
 from gui.models.settings_model import SettingsModel
 from gui.views.decrypt_view import DecryptView
 from gui.views.encrypt_view import EncryptView
+from gui.views.history_view import HistoryView
 from gui.views.home_view import HomeView
 from gui.views.main_window import MainWindow
 
@@ -65,8 +67,15 @@ def main() -> None:
     )
     main_controller.register_view("decrypt", decrypt_view)
 
+    history_view = HistoryView(master=app.container_frame)
+    history_controller = HistoryController(
+        view=history_view,
+        history_model=history_model,
+    )
+    main_controller.register_view("history", history_view)
+
     # Create Placeholder Views for Remaining Tabs
-    for page_key in ["history", "settings", "about"]:
+    for page_key in ["settings", "about"]:
         view = ctk.CTkFrame(app.container_frame, corner_radius=10)
         view.grid_columnconfigure(0, weight=1)
         view.grid_rowconfigure(0, weight=1)
