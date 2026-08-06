@@ -20,13 +20,16 @@ from gui.controllers.decrypt_controller import DecryptController
 from gui.controllers.encrypt_controller import EncryptController
 from gui.controllers.history_controller import HistoryController
 from gui.controllers.main_controller import MainController
+from gui.controllers.settings_controller import SettingsController
 from gui.models.history_model import HistoryModel
 from gui.models.settings_model import SettingsModel
+from gui.views.about_view import AboutView
 from gui.views.decrypt_view import DecryptView
 from gui.views.encrypt_view import EncryptView
 from gui.views.history_view import HistoryView
 from gui.views.home_view import HomeView
 from gui.views.main_window import MainWindow
+from gui.views.settings_view import SettingsView
 
 
 def main() -> None:
@@ -74,19 +77,15 @@ def main() -> None:
     )
     main_controller.register_view("history", history_view)
 
-    # Create Placeholder Views for Remaining Tabs
-    for page_key in ["settings", "about"]:
-        view = ctk.CTkFrame(app.container_frame, corner_radius=10)
-        view.grid_columnconfigure(0, weight=1)
-        view.grid_rowconfigure(0, weight=1)
+    settings_view = SettingsView(master=app.container_frame)
+    settings_controller = SettingsController(
+        view=settings_view,
+        settings_model=settings_model,
+    )
+    main_controller.register_view("settings", settings_view)
 
-        label = ctk.CTkLabel(
-            view,
-            text=f"Loading {page_key.capitalize()} View...",
-            font=ctk.CTkFont(size=18, weight="bold"),
-        )
-        label.grid(row=0, column=0, padx=20, pady=20)
-        main_controller.register_view(page_key, view)
+    about_view = AboutView(master=app.container_frame)
+    main_controller.register_view("about", about_view)
 
     # Restore last open page or default to home
     last_page = str(settings_model.get("last_page", "home"))
