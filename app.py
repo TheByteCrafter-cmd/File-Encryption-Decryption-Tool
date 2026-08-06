@@ -17,7 +17,9 @@ import customtkinter as ctk
 
 import config
 from gui.controllers.main_controller import MainController
+from gui.models.history_model import HistoryModel
 from gui.models.settings_model import SettingsModel
+from gui.views.home_view import HomeView
 from gui.views.main_window import MainWindow
 
 
@@ -29,8 +31,22 @@ def main() -> None:
     app = MainWindow(settings_model=settings_model)
     main_controller = MainController(main_window=app, settings_model=settings_model)
 
-    # Create Placeholder Views for Initial Shell Launch
-    for page_key in ["home", "encrypt", "decrypt", "history", "settings", "about"]:
+    history_model = HistoryModel()
+
+    # Instantiate Views
+    home_view = HomeView(
+        master=app.container_frame,
+        on_encrypt_click=lambda: main_controller.show_page("encrypt"),
+        on_decrypt_click=lambda: main_controller.show_page("decrypt"),
+    )
+    stats = history_model.get_stats()
+    home_view.update_stats(
+        stats["encrypted_count"], stats["decrypted_count"], stats["total_bytes"]
+    )
+    main_controller.register_view("home", home_view)
+
+    # Create Placeholder Views for Remaining Tabs
+    for page_key in ["encrypt", "decrypt", "history", "settings", "about"]:
         view = ctk.CTkFrame(app.container_frame, corner_radius=10)
         view.grid_columnconfigure(0, weight=1)
         view.grid_rowconfigure(0, weight=1)
