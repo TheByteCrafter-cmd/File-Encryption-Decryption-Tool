@@ -16,9 +16,11 @@ if str(BASE_DIR) not in sys.path:
 import customtkinter as ctk
 
 import config
+from gui.controllers.encrypt_controller import EncryptController
 from gui.controllers.main_controller import MainController
 from gui.models.history_model import HistoryModel
 from gui.models.settings_model import SettingsModel
+from gui.views.encrypt_view import EncryptView
 from gui.views.home_view import HomeView
 from gui.views.main_window import MainWindow
 
@@ -45,8 +47,16 @@ def main() -> None:
     )
     main_controller.register_view("home", home_view)
 
+    encrypt_view = EncryptView(master=app.container_frame)
+    encrypt_controller = EncryptController(
+        view=encrypt_view,
+        history_model=history_model,
+        settings_model=settings_model,
+    )
+    main_controller.register_view("encrypt", encrypt_view)
+
     # Create Placeholder Views for Remaining Tabs
-    for page_key in ["encrypt", "decrypt", "history", "settings", "about"]:
+    for page_key in ["decrypt", "history", "settings", "about"]:
         view = ctk.CTkFrame(app.container_frame, corner_radius=10)
         view.grid_columnconfigure(0, weight=1)
         view.grid_rowconfigure(0, weight=1)
