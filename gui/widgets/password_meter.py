@@ -105,7 +105,7 @@ class PasswordMeterWidget(ctk.CTkFrame):
 
     def get_password(self) -> str:
         """Returns current entered password string."""
-        return self.password_entry.get()
+        return str(self.password_entry.get())
 
     def set_password(self, password: str) -> None:
         """Sets password programmatically and updates strength gauge."""

@@ -54,11 +54,27 @@ def main() -> None:
     )
     main_controller.register_view("home", home_view)
 
+    history_view = HistoryView(master=app.container_frame)
+    history_controller = HistoryController(
+        view=history_view,
+        history_model=history_model,
+    )
+    main_controller.register_view("history", history_view)
+
+    def refresh_global_stats() -> None:
+        """Refreshes dashboard metrics and history table after operation completion."""
+        s = history_model.get_stats()
+        home_view.update_stats(
+            s["encrypted_count"], s["decrypted_count"], s["total_bytes"]
+        )
+        history_controller.refresh()
+
     encrypt_view = EncryptView(master=app.container_frame)
     encrypt_controller = EncryptController(
         view=encrypt_view,
         history_model=history_model,
         settings_model=settings_model,
+        on_operation_complete=refresh_global_stats,
     )
     main_controller.register_view("encrypt", encrypt_view)
 
@@ -67,15 +83,9 @@ def main() -> None:
         view=decrypt_view,
         history_model=history_model,
         settings_model=settings_model,
+        on_operation_complete=refresh_global_stats,
     )
     main_controller.register_view("decrypt", decrypt_view)
-
-    history_view = HistoryView(master=app.container_frame)
-    history_controller = HistoryController(
-        view=history_view,
-        history_model=history_model,
-    )
-    main_controller.register_view("history", history_view)
 
     settings_view = SettingsView(master=app.container_frame)
     settings_controller = SettingsController(

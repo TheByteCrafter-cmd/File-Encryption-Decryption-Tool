@@ -7,7 +7,7 @@ and interactive Password Generator dialogs.
 
 import random
 import string
-from typing import Optional
+from typing import Callable, Optional
 
 import customtkinter as ctk
 
@@ -108,7 +108,9 @@ class PasswordGenDialog(ctk.CTkToplevel):
     """
 
     def __init__(
-        self, master: ctk.CTkBaseClass, on_password_selected: Optional[callable] = None
+        self,
+        master: ctk.CTkBaseClass,
+        on_password_selected: Optional[Callable[[str], None]] = None,
     ) -> None:
         super().__init__(master)
         self.title("Strong Password Generator")

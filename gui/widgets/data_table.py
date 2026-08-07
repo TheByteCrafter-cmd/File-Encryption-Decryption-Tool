@@ -8,6 +8,7 @@ double-click activation, and right-click context menus (Open File, Reveal in Exp
 import os
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 import customtkinter as ctk

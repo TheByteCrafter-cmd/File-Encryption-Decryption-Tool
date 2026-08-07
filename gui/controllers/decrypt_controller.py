@@ -11,7 +11,7 @@ import sys
 import threading
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
 
 from encryption.aes_decrypt import FileDecryptor
 from encryption.utils import IntegrityVerificationError, InvalidFileFormatError, logger
@@ -31,10 +31,12 @@ class DecryptController:
         view: DecryptView,
         history_model: HistoryModel,
         settings_model: SettingsModel,
+        on_operation_complete: Optional[Callable[[], None]] = None,
     ) -> None:
         self.view = view
         self.history_model = history_model
         self.settings_model = settings_model
+        self.on_operation_complete = on_operation_complete
         self.last_output_path: Optional[Path] = None
 
         # Wire Up View Event Callbacks
@@ -145,6 +147,8 @@ class DecryptController:
     def _on_decryption_success(self, output_path: Path) -> None:
         """Handles post-decryption UI success updates."""
         self.view.set_processing_state(False)
+        if self.on_operation_complete:
+            self.on_operation_complete()
 
         self.view.show_shortcuts(
             on_open_folder=lambda: self._open_output_folder(output_path),
@@ -165,6 +169,9 @@ class DecryptController:
     def _on_decryption_error(self, error_msg: str) -> None:
         """Handles post-decryption UI error updates."""
         self.view.set_processing_state(False)
+        if self.on_operation_complete:
+            self.on_operation_complete()
+
         ModernDialog(
             master=self.view.winfo_toplevel(),
             title="Decryption Failed",
