@@ -15,7 +15,7 @@ if str(BASE_DIR) not in sys.path:
 
 import customtkinter as ctk
 
-import config
+from encryption.utils import logger
 from gui.controllers.decrypt_controller import DecryptController
 from gui.controllers.encrypt_controller import EncryptController
 from gui.controllers.history_controller import HistoryController
@@ -30,6 +30,21 @@ from gui.views.history_view import HistoryView
 from gui.views.home_view import HomeView
 from gui.views.main_window import MainWindow
 from gui.views.settings_view import SettingsView
+from gui.widgets.dialogs import ModernDialog
+
+
+def handle_uncaught_exception(exc_type, exc_value, exc_traceback) -> None:
+    """Global crash recovery hook logging unhandled exceptions safely."""
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    logger.critical(
+        "Uncaught Application Exception", exc_info=(exc_type, exc_value, exc_traceback)
+    )
+
+
+sys.excepthook = handle_uncaught_exception
 
 
 def main() -> None:
