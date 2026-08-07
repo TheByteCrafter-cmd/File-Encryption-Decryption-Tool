@@ -13,6 +13,7 @@ import customtkinter as ctk
 from gui.widgets.drop_zone import DropZoneWidget
 from gui.widgets.password_meter import PasswordMeterWidget
 from gui.widgets.progress_panel import ProgressPanelWidget
+from gui.widgets.queue_panel import QueuePanelWidget
 
 
 class DecryptView(ctk.CTkFrame):
@@ -73,7 +74,11 @@ class DecryptView(ctk.CTkFrame):
         self.progress_panel = ProgressPanelWidget(self)
         self.progress_panel.grid(row=4, column=0, sticky="ew", pady=(0, 15))
 
-        # 6. Post-Decryption Shortcut Action Bar (Hidden initially)
+        # 6. Batch Queue Manager Panel
+        self.queue_panel = QueuePanelWidget(self)
+        self.queue_panel.grid(row=5, column=0, sticky="ew", pady=(0, 15))
+
+        # 7. Post-Decryption Shortcut Action Bar (Hidden initially)
         self.shortcuts_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.shortcuts_frame.grid_columnconfigure((0, 1), weight=1)
 
@@ -99,7 +104,7 @@ class DecryptView(ctk.CTkFrame):
         """Displays post-decryption shortcut button bar."""
         self.btn_open_folder.configure(command=on_open_folder)
         self.btn_copy_path.configure(command=on_copy_path)
-        self.shortcuts_frame.grid(row=5, column=0, sticky="ew", pady=(0, 10))
+        self.shortcuts_frame.grid(row=6, column=0, sticky="ew", pady=(0, 10))
 
     def hide_shortcuts(self) -> None:
         """Hides post-decryption shortcut button bar."""

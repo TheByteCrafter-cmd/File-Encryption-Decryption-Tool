@@ -52,6 +52,7 @@ def main() -> None:
     home_view.update_stats(
         stats["encrypted_count"], stats["decrypted_count"], stats["total_bytes"]
     )
+    home_view.update_recent_files(history_model.records)
     main_controller.register_view("home", home_view)
 
     history_view = HistoryView(master=app.container_frame)
@@ -67,6 +68,7 @@ def main() -> None:
         home_view.update_stats(
             s["encrypted_count"], s["decrypted_count"], s["total_bytes"]
         )
+        home_view.update_recent_files(history_model.records)
         history_controller.refresh()
 
     encrypt_view = EncryptView(master=app.container_frame)

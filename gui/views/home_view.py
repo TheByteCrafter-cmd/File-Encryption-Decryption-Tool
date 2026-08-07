@@ -166,6 +166,25 @@ class HomeView(ctk.CTkFrame):
         )
         self.card_data.grid(row=0, column=2, sticky="ew", padx=(10, 0))
 
+        # 4. Recent Activity List Card
+        self.recent_card = ctk.CTkFrame(
+            self, corner_radius=12, fg_color=("gray90", "gray20")
+        )
+        self.recent_card.grid(row=3, column=0, sticky="ew")
+        self.recent_card.grid_columnconfigure(0, weight=1)
+
+        self.recent_title = ctk.CTkLabel(
+            self.recent_card,
+            text="🕒 Recent Activity",
+            font=ctk.CTkFont(size=14, weight="bold"),
+            anchor="w",
+        )
+        self.recent_title.grid(row=0, column=0, padx=20, pady=(15, 10), sticky="w")
+
+        self.recent_list_frame = ctk.CTkFrame(self.recent_card, fg_color="transparent")
+        self.recent_list_frame.grid(row=1, column=0, sticky="ew", padx=20, pady=(0, 15))
+        self.recent_list_frame.grid_columnconfigure(1, weight=1)
+
     def update_stats(
         self, encrypted_count: int, decrypted_count: int, total_bytes: int
     ) -> None:
@@ -179,3 +198,48 @@ class HomeView(ctk.CTkFrame):
         else:
             val_str = f"{mb / 1024:.2f} GB"
         self.card_data.update_value(val_str)
+
+    def update_recent_files(self, records: list) -> None:
+        """Populates recent 5 operations list."""
+        for child in self.recent_list_frame.winfo_children():
+            child.destroy()
+
+        if not records:
+            lbl = ctk.CTkLabel(
+                self.recent_list_frame,
+                text="No recent operations recorded.",
+                font=ctk.CTkFont(size=12),
+                text_color="gray60",
+            )
+            lbl.grid(row=0, column=0, pady=10)
+            return
+
+        for idx, rec in enumerate(records[:5]):
+            icon_str = "🔒" if rec.get("operation") == "Encrypt" else "🔓"
+            row = ctk.CTkFrame(
+                self.recent_list_frame, fg_color=("gray95", "gray25"), corner_radius=6
+            )
+            row.grid(row=idx, column=0, columnspan=2, sticky="ew", pady=2)
+            row.grid_columnconfigure(1, weight=1)
+
+            lbl_icon = ctk.CTkLabel(row, text=icon_str, font=ctk.CTkFont(size=14))
+            lbl_icon.grid(row=0, column=0, padx=(10, 5), pady=6)
+
+            lbl_name = ctk.CTkLabel(
+                row,
+                text=f"{rec.get('filename', '')} ({rec.get('timestamp', '')})",
+                font=ctk.CTkFont(size=12),
+                anchor="w",
+            )
+            lbl_name.grid(row=0, column=1, sticky="w", padx=5, pady=6)
+
+            status = rec.get("status", "SUCCESS")
+            status_color = "#107C41" if status == "SUCCESS" else "#D13438"
+            lbl_status = ctk.CTkLabel(
+                row,
+                text=status,
+                font=ctk.CTkFont(size=11, weight="bold"),
+                text_color=status_color,
+                anchor="e",
+            )
+            lbl_status.grid(row=0, column=2, padx=10, pady=6, sticky="e")

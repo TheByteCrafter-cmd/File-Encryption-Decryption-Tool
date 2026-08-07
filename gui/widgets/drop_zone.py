@@ -2,11 +2,11 @@
 Interactive File Drag & Drop Target Widget.
 
 Provides an interactive target zone supporting TkinterDnD drag-and-drop events and click-to-browse
-file selection with hover highlights and file details card.
+file selection (single & multi-file batch) with hover highlights and file details card.
 """
 
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, List, Optional
 
 import customtkinter as ctk
 from customtkinter import filedialog
@@ -14,7 +14,7 @@ from customtkinter import filedialog
 
 class DropZoneWidget(ctk.CTkFrame):
     """
-    Interactive drag-and-drop and browse target container.
+    Interactive drag-and-drop and browse target container supporting multi-file batch selection.
     """
 
     def __init__(
@@ -22,6 +22,7 @@ class DropZoneWidget(ctk.CTkFrame):
         master: ctk.CTkBaseClass,
         file_types: Optional[list] = None,
         on_file_selected: Optional[Callable[[Path], None]] = None,
+        on_batch_selected: Optional[Callable[[List[Path]], None]] = None,
         **kwargs,
     ) -> None:
         super().__init__(
@@ -33,7 +34,9 @@ class DropZoneWidget(ctk.CTkFrame):
         )
         self.file_types = file_types or [("All Files", "*.*")]
         self.on_file_selected = on_file_selected
+        self.on_batch_selected = on_batch_selected
         self.selected_file: Optional[Path] = None
+        self.selected_files: List[Path] = []
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -52,7 +55,7 @@ class DropZoneWidget(ctk.CTkFrame):
 
         self.text_label = ctk.CTkLabel(
             self.prompt_frame,
-            text="Drag & Drop your file here\nor click to browse",
+            text="Drag & Drop file(s) here\nor click to browse",
             font=ctk.CTkFont(size=14, weight="bold"),
             text_color=("gray20", "gray80"),
         )
@@ -60,9 +63,9 @@ class DropZoneWidget(ctk.CTkFrame):
 
         self.browse_btn = ctk.CTkButton(
             self.prompt_frame,
-            text="Browse File",
+            text="Browse Files",
             width=130,
-            command=self._browse_file,
+            command=self._browse_files,
         )
         self.browse_btn.grid(row=2, column=0, pady=(10, 5))
 
@@ -107,7 +110,7 @@ class DropZoneWidget(ctk.CTkFrame):
 
         # Bind Click & Hover Glow Events to Prompt Frame
         for widget in (self, self.prompt_frame, self.icon_label, self.text_label):
-            widget.bind("<Button-1>", lambda e: self._browse_file())
+            widget.bind("<Button-1>", lambda e: self._browse_files())
             widget.bind("<Enter>", lambda e: self._on_hover_enter())
             widget.bind("<Leave>", lambda e: self._on_hover_leave())
 
@@ -120,37 +123,55 @@ class DropZoneWidget(ctk.CTkFrame):
         self.configure(border_color=("gray75", "gray30"))
 
     def set_file(self, file_path: Path) -> None:
-        """Sets the selected file and updates card UI."""
-        path = Path(file_path).resolve()
-        if not path.exists() or not path.is_file():
+        """Sets a single selected file."""
+        self.set_files([file_path])
+
+    def set_files(self, file_paths: List[Path]) -> None:
+        """Sets selected file(s) and updates card UI."""
+        valid_paths = [
+            Path(p).resolve()
+            for p in file_paths
+            if Path(p).exists() and Path(p).is_file()
+        ]
+        if not valid_paths:
             return
 
-        self.selected_file = path
+        self.selected_files = valid_paths
+        self.selected_file = valid_paths[0]
 
-        # Update Card Labels
-        self.card_name.configure(text=path.name)
-        size_bytes = path.stat().st_size
-        size_str = self._format_size(size_bytes)
-        self.card_size.configure(text=size_str)
+        if len(valid_paths) == 1:
+            p = valid_paths[0]
+            self.card_name.configure(text=p.name)
+            size_str = self._format_size(p.stat().st_size)
+            self.card_size.configure(text=size_str)
+        else:
+            total_bytes = sum(p.stat().st_size for p in valid_paths)
+            self.card_name.configure(text=f"Batch: {len(valid_paths)} Files Selected")
+            self.card_size.configure(
+                text=f"Total Payload Size: {self._format_size(total_bytes)}"
+            )
 
-        # Switch View: Hide prompt, show card
         self.prompt_frame.grid_forget()
         self.card_frame.grid(row=0, column=0, padx=20, pady=20, sticky="ew")
 
-        if self.on_file_selected:
+        if self.on_file_selected and self.selected_file:
             self.on_file_selected(self.selected_file)
+        if self.on_batch_selected:
+            self.on_batch_selected(self.selected_files)
 
     def clear_selection(self) -> None:
         """Clears current file selection and returns to drop zone prompt."""
         self.selected_file = None
+        self.selected_files.clear()
         self.card_frame.grid_forget()
         self.prompt_frame.grid(row=0, column=0, padx=20, pady=30, sticky="nsew")
 
-    def _browse_file(self) -> None:
-        """Opens native file chooser dialog."""
-        chosen = filedialog.askopenfilename(filetypes=self.file_types)
+    def _browse_files(self) -> None:
+        """Opens native file chooser dialog supporting multi-file selection."""
+        chosen = filedialog.askopenfilenames(filetypes=self.file_types)
         if chosen:
-            self.set_file(Path(chosen))
+            paths = [Path(c) for c in chosen]
+            self.set_files(paths)
 
     @staticmethod
     def _format_size(size_bytes: int) -> str:
