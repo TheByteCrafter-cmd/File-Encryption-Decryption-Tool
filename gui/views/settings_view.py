@@ -40,7 +40,7 @@ class SettingsView(ctk.CTkFrame):
 
         # Card Container
         self.card_frame = ctk.CTkFrame(
-            self, corner_radius=12, fg_color=("gray90", "gray20")
+            self, corner_radius=16, fg_color=("gray90", "gray20")
         )
         self.card_frame.grid(row=1, column=0, sticky="ew", pady=(0, 20))
         self.card_frame.grid_columnconfigure(1, weight=1)
@@ -108,7 +108,10 @@ class SettingsView(ctk.CTkFrame):
             self,
             text="💾 Save Settings",
             font=ctk.CTkFont(size=14, weight="bold"),
-            height=40,
+            height=42,
+            corner_radius=10,
+            fg_color="#2563EB",
+            hover_color="#1D4ED8",
             command=self.on_save_click,
         )
         self.save_btn.grid(row=2, column=0, sticky="ew")

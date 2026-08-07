@@ -63,9 +63,10 @@ class DecryptView(ctk.CTkFrame):
             self,
             text="🔓 Decrypt File Now",
             font=ctk.CTkFont(size=14, weight="bold"),
-            height=42,
-            fg_color="#107C41",
-            hover_color="#0e6b37",
+            height=44,
+            corner_radius=10,
+            fg_color="#16A34A",
+            hover_color="#15803D",
             command=self.on_decrypt_click,
         )
         self.decrypt_btn.grid(row=3, column=0, sticky="ew", pady=(0, 15))

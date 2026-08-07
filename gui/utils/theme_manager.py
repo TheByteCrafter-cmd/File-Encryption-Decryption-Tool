@@ -1,7 +1,7 @@
 """
 Theme Management and Color Palette Subsystem.
 
-Defines Windows 11 Fluent and VSCode inspired color palettes and handles dynamic mode switching
+Defines commercial Windows 11 Fluent Design color tokens and handles dynamic mode switching
 with darkdetect system theme detection.
 """
 
@@ -12,27 +12,31 @@ import darkdetect
 
 
 class ThemeColors:
-    """Windows 11 Fluent & VSCode dark/light theme color constants."""
+    """Windows 11 Fluent Design light and dark color palette constants."""
 
-    PRIMARY: str = "#0078D4"  # Windows Accent Blue
-    PRIMARY_HOVER: str = "#106EBE"  # Hover Blue
-    SUCCESS: str = "#107C41"  # Fluent Green
-    WARNING: str = "#FCE100"  # Fluent Yellow
-    ERROR: str = "#D13438"  # Fluent Red
-
-    # Dark Mode Palette
-    DARK_BG: str = "#181818"
-    DARK_CARD: str = "#202020"
-    DARK_BORDER: str = "#2D2D2D"
-    DARK_TEXT: str = "#FFFFFF"
-    DARK_SUBTEXT: str = "#A0A0A0"
-
-    # Light Mode Palette
-    LIGHT_BG: str = "#F3F3F3"
+    # Light Theme Palette
+    LIGHT_BG: str = "#F5F7FA"
     LIGHT_CARD: str = "#FFFFFF"
-    LIGHT_BORDER: str = "#E5E5E5"
-    LIGHT_TEXT: str = "#1F1F1F"
-    LIGHT_SUBTEXT: str = "#606060"
+    LIGHT_BORDER: str = "#E5E7EB"
+    LIGHT_TEXT: str = "#111827"
+    LIGHT_SUBTEXT: str = "#6B7280"
+    LIGHT_PRIMARY: str = "#2563EB"
+    LIGHT_PRIMARY_HOVER: str = "#1D4ED8"
+    LIGHT_SUCCESS: str = "#16A34A"
+    LIGHT_WARNING: str = "#F59E0B"
+    LIGHT_DANGER: str = "#DC2626"
+
+    # Dark Theme Palette
+    DARK_BG: str = "#0F172A"
+    DARK_CARD: str = "#1E293B"
+    DARK_BORDER: str = "#334155"
+    DARK_TEXT: str = "#F8FAFC"
+    DARK_SUBTEXT: str = "#94A3B8"
+    DARK_PRIMARY: str = "#3B82F6"
+    DARK_PRIMARY_HOVER: str = "#2563EB"
+    DARK_SUCCESS: str = "#22C55E"
+    DARK_WARNING: str = "#F59E0B"
+    DARK_DANGER: str = "#EF4444"
 
 
 class ThemeManager:
@@ -65,11 +69,11 @@ class ThemeManager:
                 "border": ThemeColors.DARK_BORDER,
                 "text": ThemeColors.DARK_TEXT,
                 "subtext": ThemeColors.DARK_SUBTEXT,
-                "primary": ThemeColors.PRIMARY,
-                "primary_hover": ThemeColors.PRIMARY_HOVER,
-                "success": ThemeColors.SUCCESS,
-                "warning": ThemeColors.WARNING,
-                "error": ThemeColors.ERROR,
+                "primary": ThemeColors.DARK_PRIMARY,
+                "primary_hover": ThemeColors.DARK_PRIMARY_HOVER,
+                "success": ThemeColors.DARK_SUCCESS,
+                "warning": ThemeColors.DARK_WARNING,
+                "danger": ThemeColors.DARK_DANGER,
             }
         else:
             return {
@@ -78,9 +82,9 @@ class ThemeManager:
                 "border": ThemeColors.LIGHT_BORDER,
                 "text": ThemeColors.LIGHT_TEXT,
                 "subtext": ThemeColors.LIGHT_SUBTEXT,
-                "primary": ThemeColors.PRIMARY,
-                "primary_hover": ThemeColors.PRIMARY_HOVER,
-                "success": ThemeColors.SUCCESS,
-                "warning": ThemeColors.WARNING,
-                "error": ThemeColors.ERROR,
+                "primary": ThemeColors.LIGHT_PRIMARY,
+                "primary_hover": ThemeColors.LIGHT_PRIMARY_HOVER,
+                "success": ThemeColors.LIGHT_SUCCESS,
+                "warning": ThemeColors.LIGHT_WARNING,
+                "danger": ThemeColors.LIGHT_DANGER,
             }

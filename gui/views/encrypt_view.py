@@ -68,9 +68,10 @@ class EncryptView(ctk.CTkFrame):
             self,
             text="🔒 Encrypt File Now",
             font=ctk.CTkFont(size=14, weight="bold"),
-            height=42,
-            fg_color="#0078D4",
-            hover_color="#106EBE",
+            height=44,
+            corner_radius=10,
+            fg_color="#2563EB",
+            hover_color="#1D4ED8",
             command=self.on_encrypt_click,
         )
         self.encrypt_btn.grid(row=3, column=0, sticky="ew", pady=(0, 15))

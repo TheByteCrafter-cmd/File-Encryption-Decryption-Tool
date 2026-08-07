@@ -1,7 +1,8 @@
 """
 Dashboard Metric Card Widget.
 
-Displays an accent-styled card containing an icon, metric value, and description label.
+Displays a commercial-grade accent-styled card with 16px corner radius, icon badge,
+metric value, description label, and hover highlight effects.
 """
 
 import customtkinter as ctk
@@ -9,7 +10,7 @@ import customtkinter as ctk
 
 class MetricCardWidget(ctk.CTkFrame):
     """
-    Modern dashboard statistic card container.
+    Commercial dashboard statistic card container.
     """
 
     def __init__(
@@ -18,23 +19,24 @@ class MetricCardWidget(ctk.CTkFrame):
         icon: str,
         title: str,
         value: str,
-        accent_color: str = "#0078D4",
+        accent_color: str = "#2563EB",
         **kwargs,
     ) -> None:
         super().__init__(
-            master, corner_radius=12, fg_color=("gray90", "gray20"), **kwargs
+            master, corner_radius=16, fg_color=("gray90", "gray20"), **kwargs
         )
+        self.accent_color = accent_color
 
         self.grid_columnconfigure(1, weight=1)
 
-        # 1. Accent Left Strip / Icon
+        # 1. Icon Badge
         self.icon_badge = ctk.CTkLabel(
             self,
             text=icon,
-            font=ctk.CTkFont(size=28),
-            width=50,
-            height=50,
-            corner_radius=8,
+            font=ctk.CTkFont(size=26),
+            width=48,
+            height=48,
+            corner_radius=12,
             fg_color=accent_color,
             text_color="white",
         )
@@ -44,7 +46,7 @@ class MetricCardWidget(ctk.CTkFrame):
         self.val_label = ctk.CTkLabel(
             self,
             text=value,
-            font=ctk.CTkFont(size=20, weight="bold"),
+            font=ctk.CTkFont(size=22, weight="bold"),
             anchor="w",
         )
         self.val_label.grid(row=0, column=1, sticky="w", padx=(0, 15), pady=(15, 0))
@@ -58,6 +60,10 @@ class MetricCardWidget(ctk.CTkFrame):
             anchor="w",
         )
         self.title_label.grid(row=1, column=1, sticky="w", padx=(0, 15), pady=(0, 15))
+
+        # Bind Hover Highlight
+        self.bind("<Enter>", lambda e: self.configure(fg_color=("gray85", "gray25")))
+        self.bind("<Leave>", lambda e: self.configure(fg_color=("gray90", "gray20")))
 
     def update_value(self, new_value: str) -> None:
         """Updates metric value text dynamically."""

@@ -1,10 +1,12 @@
 """
 About Page View Frame.
 
-Displays application branding, version badges, developer credits, cryptographic specifications,
-and GitHub repository links.
+Displays application branding, version badges, developer credits, cryptographic specifications grid,
+system environment information, and GitHub repository links.
 """
 
+import platform
+import sys
 import webbrowser
 
 import customtkinter as ctk
@@ -18,7 +20,7 @@ class AboutView(ctk.CTkFrame):
     """
 
     def __init__(self, master: ctk.CTkBaseClass, **kwargs) -> None:
-        super().__init__(master, corner_radius=12, fg_color="transparent", **kwargs)
+        super().__init__(master, corner_radius=16, fg_color="transparent", **kwargs)
 
         self.grid_columnconfigure(0, weight=1)
 
@@ -33,13 +35,13 @@ class AboutView(ctk.CTkFrame):
 
         # Main Info Card Container
         self.card_frame = ctk.CTkFrame(
-            self, corner_radius=12, fg_color=("gray90", "gray20")
+            self, corner_radius=16, fg_color=("gray90", "gray20")
         )
         self.card_frame.grid(row=1, column=0, sticky="ew", pady=(0, 20))
         self.card_frame.grid_columnconfigure(1, weight=1)
 
         self.logo_label = ctk.CTkLabel(
-            self.card_frame, text="🔐", font=ctk.CTkFont(size=48)
+            self.card_frame, text="🛡️", font=ctk.CTkFont(size=44)
         )
         self.logo_label.grid(row=0, column=0, rowspan=3, padx=25, pady=25)
 
@@ -55,7 +57,7 @@ class AboutView(ctk.CTkFrame):
             self.card_frame,
             text=f"Version {config.APP_VERSION} | License: MIT",
             font=ctk.CTkFont(size=12, weight="bold"),
-            text_color="#0078D4",
+            text_color="#2563EB",
             anchor="w",
         )
         self.version_lbl.grid(row=1, column=1, sticky="w", padx=(0, 25), pady=2)
@@ -71,17 +73,22 @@ class AboutView(ctk.CTkFrame):
 
         # Specifications Frame
         self.specs_frame = ctk.CTkFrame(
-            self, corner_radius=12, fg_color=("gray90", "gray20")
+            self, corner_radius=16, fg_color=("gray90", "gray20")
         )
         self.specs_frame.grid(row=2, column=0, sticky="ew", pady=(0, 20))
         self.specs_frame.grid_columnconfigure(1, weight=1)
 
         specs = [
-            ("Encryption Algorithm", "AES-256-GCM (Authenticated Encryption)"),
-            ("Key Derivation", "PBKDF2-HMAC-SHA256 (600,000 Iterations)"),
+            ("Encryption Standard", "AES-256-GCM (Authenticated Encryption)"),
+            ("Key Derivation Function", "PBKDF2-HMAC-SHA256 (600,000 Iterations)"),
             ("Streaming Architecture", "Low-level Cipher API (64 KB Chunks)"),
-            ("Metadata Standard", "Contiguous Binary Header (Magic: FEDT)"),
-            ("GUI Framework", "CustomTkinter / TkinterDnD2 / Pillow"),
+            ("Binary Header Protocol", "Contiguous Format (Magic: FEDT)"),
+            ("GUI Presentation Layer", "CustomTkinter / TkinterDnD2 / Pillow"),
+            ("Host Python Environment", f"Python {sys.version.split()[0]}"),
+            (
+                "Operating System",
+                f"{platform.system()} {platform.release()} ({platform.machine()})",
+            ),
         ]
 
         for i, (k, v) in enumerate(specs):
@@ -107,7 +114,10 @@ class AboutView(ctk.CTkFrame):
             self,
             text="🌐 Open GitHub Repository",
             font=ctk.CTkFont(size=14, weight="bold"),
-            height=40,
+            height=42,
+            corner_radius=10,
+            fg_color="#2563EB",
+            hover_color="#1D4ED8",
             command=self._open_github,
         )
         self.github_btn.grid(row=3, column=0, sticky="ew")
