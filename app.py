@@ -62,6 +62,8 @@ def main() -> None:
         master=app.container_frame,
         on_encrypt_click=lambda: main_controller.show_page("encrypt"),
         on_decrypt_click=lambda: main_controller.show_page("decrypt"),
+        on_history_click=lambda: main_controller.show_page("history"),
+        on_settings_click=lambda: main_controller.show_page("settings"),
     )
     stats = history_model.get_stats()
     home_view.update_stats(
