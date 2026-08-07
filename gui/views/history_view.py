@@ -72,9 +72,11 @@ class HistoryView(ctk.CTkFrame):
         self.btn_clear = ctk.CTkButton(
             self.header_frame,
             text="🗑️ Clear",
-            width=80,
-            fg_color="#D13438",
-            hover_color="#A8282C",
+            width=85,
+            height=36,
+            corner_radius=10,
+            fg_color="#DC2626",
+            hover_color="#B91C1C",
             command=self.on_clear_click,
         )
         self.btn_clear.grid(row=0, column=3)

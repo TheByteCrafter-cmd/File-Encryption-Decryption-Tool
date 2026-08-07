@@ -115,7 +115,7 @@ class DataTableWidget(ctk.CTkFrame):
             c_size.grid(row=0, column=3, sticky="w", padx=10, pady=8)
 
             status = rec.get("status", "SUCCESS")
-            status_color = "#107C41" if status == "SUCCESS" else "#D13438"
+            status_color = "#16A34A" if status == "SUCCESS" else "#DC2626"
             c_status = ctk.CTkLabel(
                 row_frame,
                 text=status,

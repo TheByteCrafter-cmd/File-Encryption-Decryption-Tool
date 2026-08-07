@@ -18,7 +18,7 @@ class ProgressPanelWidget(ctk.CTkFrame):
 
     def __init__(self, master: ctk.CTkBaseClass, **kwargs) -> None:
         super().__init__(
-            master, corner_radius=10, fg_color=("gray90", "gray20"), **kwargs
+            master, corner_radius=16, fg_color=("gray90", "gray20"), **kwargs
         )
 
         self.grid_columnconfigure(0, weight=1)
@@ -43,12 +43,14 @@ class ProgressPanelWidget(ctk.CTkFrame):
             self.header_row,
             text="0%",
             font=ctk.CTkFont(size=13, weight="bold"),
-            text_color="#0078D4",
+            text_color="#2563EB",
         )
         self.percent_label.grid(row=0, column=1, sticky="e")
 
         # 2. Progress Bar
-        self.progress_bar = ctk.CTkProgressBar(self, height=10, corner_radius=5)
+        self.progress_bar = ctk.CTkProgressBar(
+            self, height=10, corner_radius=5, progress_color="#2563EB"
+        )
         self.progress_bar.grid(row=1, column=0, sticky="ew", padx=15, pady=5)
         self.progress_bar.set(0.0)
 
